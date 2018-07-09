@@ -8,7 +8,8 @@ const createStore = (reducer) => {
     getState: () => state,
     dispatch: (action) => {
       // dispatch takes an action object and updates the store.
-      // TODO: The dispatch function verifies that the action is legitimate (is an object with a "type") and calls the store's reducer function (the one used in createStore).
+      // The dispatch function verifies that the action is legitimate (is an object with a "type") and calls the store's reducer function (the one used in createStore).
+      if (typeof action !== 'object' || !action.type) throw new Error('Action must be an object with a "type" field');
 
       // The arguments passed to the reducer are the current state of the store and the dispatched action.
       // The result returned by the reducer is set as the new state of the store
