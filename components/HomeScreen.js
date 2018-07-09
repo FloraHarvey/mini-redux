@@ -24,9 +24,9 @@ export default class HomeScreen extends React.PureComponent {
     const { isLoggedIn } = state;
 
     console.log(`store.getState()`, store.getState());
-    console.log(`store.dispatch(login)`, store.dispatch(login));
+    store.dispatch(login());
     console.log(`store.getState()`, store.getState());
-    console.log(`store.dispatch(logout)`, store.dispatch(logout));
+    store.dispatch(logout());
     console.log(`store.getState()`, store.getState());
 
     return (
