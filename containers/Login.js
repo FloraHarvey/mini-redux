@@ -1,14 +1,15 @@
 import React from 'react';
 import { StyleSheet, Text, View, Button } from 'react-native';
-import createStore from '../redux-reimplementation';
+import PropTypes from 'prop-types';
+import { connect } from '../redux-reimplementation/my-react-redux/myConnect';
 
 import reducer from '../reducers/user';
 import { login, logout } from '../actions/user';
 
 
-export default class HomeScreen extends React.PureComponent {
+class LoginContainer extends React.PureComponent {
   static navigationOptions = {
-    title: 'Welcome',
+    title: 'Login',
   };
 
   onLogout = () => {
@@ -16,9 +17,7 @@ export default class HomeScreen extends React.PureComponent {
   }
 
   render() {
-    const { navigate } = this.props.navigation;
-
-    const { isLoggedIn } = state;
+    const { isLoggedIn } = this.props;
 
     return (
       <View>
@@ -39,3 +38,13 @@ export default class HomeScreen extends React.PureComponent {
     );
   }
 }
+
+const mapStateToProps = (state) => {
+  return { isLoggedIn: state.isLoggedIn }
+}
+
+LoginContainer.contextTypes = {
+  store: PropTypes.object
+}
+
+export default connect(mapStateToProps)(LoginContainer);
