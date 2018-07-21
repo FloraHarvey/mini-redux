@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Button } from 'react-native';
+import { View, Button, Text } from 'react-native';
 import PropTypes from 'prop-types';
 import { connect } from '../my-react-redux/myConnect';
 
@@ -7,27 +7,23 @@ import { login, logout } from '../actions/user';
 
 
 class LoginContainer extends React.PureComponent {
-  static navigationOptions = {
-    title: 'Login',
-  };
 
   render() {
     const { isLoggedIn } = this.props;
 
-    console.log(`this.props`, this.props.login);
-
     return (
-      <View>
+      <View
+        style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}
+      >
+        <Text>{this.props.greeting}</Text>
         {!isLoggedIn ? <Button
           title="Login"
           onPress={() => this.props.login()}
         /> : null}
-        {isLoggedIn ? <View>
-            <Button
-              title="Logout"
-              onPress={() => this.props.logout()}
-            />
-          </View>
+        {isLoggedIn ? <Button
+            title="Logout"
+            onPress={() => this.props.logout()}
+          />
           : null }
       </View>
     );
@@ -35,7 +31,9 @@ class LoginContainer extends React.PureComponent {
 }
 
 const mapStateToProps = (state) => {
-  return { isLoggedIn: state.isLoggedIn };
+  return {
+    isLoggedIn: state.isLoggedIn,
+  };
 };
 
 // example mapDispatchToProps as an object:

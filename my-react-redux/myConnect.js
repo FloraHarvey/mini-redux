@@ -31,7 +31,7 @@ export const connect = (mapStateToProps, mapDispatchToProps) => {
 
         const state = store.getState();
 
-        const stateToProps = mapStateToProps(state);
+        const stateToProps = mapStateToProps(state, this.props);
 
         let dispatchProps;
 
@@ -58,7 +58,7 @@ export const connect = (mapStateToProps, mapDispatchToProps) => {
         }
 
         return (
-            <WrappedComponent {...stateToProps} {...dispatchProps} />
+            <WrappedComponent {...stateToProps} {...dispatchProps} {...this.props} />
         );
       }
     }
@@ -73,10 +73,10 @@ export const connect = (mapStateToProps, mapDispatchToProps) => {
     // In order to use React context consumer, there is an intermediary component that passes the store through to the connected
     // component as a prop so that it can be used by lifecycle methods
 
-    const ConsumingComponent = () => {
+    const ConsumingComponent = (props) => {
       return (
         <StoreContext.Consumer>
-          {store => <ConnectedComponent store={store} />}
+          {store => <ConnectedComponent store={store} {...props} />}
         </StoreContext.Consumer>
       );
     };
