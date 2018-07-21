@@ -14,7 +14,7 @@ const createStore = (reducer) => {
       // The arguments passed to the reducer are the current state of the store and the dispatched action.
       // The result returned by the reducer is set as the new state of the store
       state = reducer(state, action);
-
+      console.log(`listeners`, listeners);
       // all of the subscribed callback functions are called.
       listeners.forEach(listener => listener());
     },

@@ -2,8 +2,8 @@ import React from 'react';
 import {
   createStackNavigator,
 } from 'react-navigation';
-import MyProvider from './redux-reimplementation/my-react-redux/MyProvider'
-import createStore from './redux-reimplementation';
+import MyProvider from './my-react-redux/MyProvider';
+import createStore from './my-redux';
 
 import reducer from './reducers/user';
 

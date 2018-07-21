@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View, Button } from 'react-native';
-import createStore from '../redux-reimplementation';
+import createStore from '../my-redux';
 
 import reducer from '../reducers/user';
 import { login, logout } from '../actions/user';

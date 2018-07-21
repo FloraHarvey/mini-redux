@@ -15,11 +15,15 @@ export const connect = (mapStateToProps, mapDispatchToProps) => {
 
       componentDidMount() {
         const { store } = this.props;
-        this.unsubscribe = store.subscribe(mapStateToProps);
+        this.unsubscribe = store.subscribe(this.updateComponent);
       }
 
       componentWillUnmount() {
         this.unsubscribe();
+      }
+
+      updateComponent = () => {
+        this.forceUpdate();
       }
 
       render() {
@@ -29,15 +33,39 @@ export const connect = (mapStateToProps, mapDispatchToProps) => {
 
         const stateToProps = mapStateToProps(state);
 
+        let dispatchProps;
+
+        // if mapDispatchToProps is not provided, the dispatch function is injected into props
+        if (!mapDispatchToProps) {
+          dispatchProps = {
+            dispatch: store.dispatch,
+          };
+        }
+
+        // if mapDispatchToProps is an object, it is assumed that each fucntion is an action creator.
+        // An object with the same function names, but with each action creator wrapped in a dispatch call so they may
+        // be invoked directly, is injected into props
+        if (typeof mapDispatchToProps === 'object') {
+          dispatchProps = {};
+          Object.keys(mapDispatchToProps).forEach(k => {
+            dispatchProps[k] = () => store.dispatch(mapDispatchToProps[k]());
+          });
+        }
+
+        // If a function is passed, it will be given dispatch as the first parameter
+        if (typeof mapDispatchToProps === 'function') {
+          dispatchProps = mapDispatchToProps(store.dispatch, this.props);
+        }
+
         return (
-            <WrappedComponent {...stateToProps} />
+            <WrappedComponent {...stateToProps} {...dispatchProps} />
         );
       }
-    };
+    }
 
     ConnectedComponent.contextTypes = {
       store: PropTypes.object,
-    }
+    };
 
     // Returns a function that takes a stateless component and returns a higher-order React component class
     // that passes state and action creators into your component derived from the supplied arguments.
@@ -57,5 +85,4 @@ export const connect = (mapStateToProps, mapDispatchToProps) => {
 
   };
 
-
-}
+};

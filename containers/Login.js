@@ -1,9 +1,8 @@
 import React from 'react';
-import { StyleSheet, Text, View, Button } from 'react-native';
+import { View, Button } from 'react-native';
 import PropTypes from 'prop-types';
-import { connect } from '../redux-reimplementation/my-react-redux/myConnect';
+import { connect } from '../my-react-redux/myConnect';
 
-import reducer from '../reducers/user';
 import { login, logout } from '../actions/user';
 
 
@@ -12,39 +11,49 @@ class LoginContainer extends React.PureComponent {
     title: 'Login',
   };
 
-  onLogout = () => {
-    return null;
-  }
-
   render() {
     const { isLoggedIn } = this.props;
+
+    console.log(`this.props`, this.props.login);
 
     return (
       <View>
         {!isLoggedIn ? <Button
           title="Login"
-          onPress={() => {
-            this.isLoggedIn = true;
-          }}
+          onPress={() => this.props.login()}
         /> : null}
         {isLoggedIn ? <View>
             <Button
               title="Logout"
-              onPress={() => onLogout}
+              onPress={() => this.props.logout()}
             />
           </View>
-        : null}
+          : null }
       </View>
     );
   }
 }
 
 const mapStateToProps = (state) => {
-  return { isLoggedIn: state.isLoggedIn }
-}
+  return { isLoggedIn: state.isLoggedIn };
+};
+
+// example mapDispatchToProps as an object:
+// const mapDispatchToProps = {
+//   login,
+// };
+
+// example mapDispatchToProps as a function
+const mapDispatchToProps = (dispatch) => {
+  return {
+    login: () => dispatch(login()),
+    logout: () => dispatch(logout()),
+  };
+};
+
 
 LoginContainer.contextTypes = {
-  store: PropTypes.object
-}
+  store: PropTypes.object,
+};
 
-export default connect(mapStateToProps)(LoginContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(LoginContainer);
