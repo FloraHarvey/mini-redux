@@ -1,4 +1,4 @@
-import { createStore, combineReducers } from '../index';
+import { createStore, combineReducers, applyMiddleware } from '../index';
 import userReducer, { initialState } from '../../reducers/user';
 import favouritesReducer from '../../reducers/favourites';
 import { login, logout } from '../../actions/user';
@@ -66,4 +66,31 @@ describe('combineReducers', () => {
     expect(() => combineReducers({mock: mockReducer})).toThrowError('Reducers passed to combineReducers must not return undefined');
   });
 
+});
+
+describe('applyMiddleware', () => {
+  it('takes an array of middlewares and returns a function that takes the store as an argument and wraps its dispatch method with the chained middlewares', () => {
+    const middleware = jest.fn();
+    const middlewareReturnFunction = jest.fn();
+    const wrappedDispatch = jest.fn();
+
+    middleware.mockReturnValue(middlewareReturnFunction);
+    middlewareReturnFunction.mockReturnValue(wrappedDispatch)
+
+    const getState = jest.fn();
+    const dispatch = jest.fn();
+    const store = {
+      getState,
+      dispatch,
+    }
+
+    applyMiddleware([middleware])(store);
+    expect(middleware).toHaveBeenCalledWith(
+      expect.objectContaining({
+        getState,
+        dispatch
+      })
+    );
+    expect(store.dispatch).toEqual(wrappedDispatch);
+  });
 });

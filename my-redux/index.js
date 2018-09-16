@@ -1,4 +1,4 @@
-export const createStore = (reducer) => {
+export const createStore = (reducer, preloadedState, storeEnhancer) => {
   const initialState = reducer(undefined, { type: 'Initial action' });
   let state = initialState;
 
@@ -29,6 +29,10 @@ export const createStore = (reducer) => {
     },
   };
 
+  if (storeEnhancer) {
+    storeEnhancer(store);
+  }
+
   return store;
 };
 
@@ -53,4 +57,18 @@ export const combineReducers = (reducersObject) => {
     });
     return newState;
   };
+};
+
+export const applyMiddleware = (middlewares) => (store) => {
+  middlewares.reverse();
+  const { getState, dispatch } = store;
+  let dispatchWithMiddleware = store.dispatch;
+
+  // Transform dispatch function with each middleware.
+  middlewares.forEach(middleware => {
+    dispatchWithMiddleware = middleware({ getState, dispatch })(dispatchWithMiddleware)
+  });
+
+  store.dispatch = dispatchWithMiddleware;
+
 };
