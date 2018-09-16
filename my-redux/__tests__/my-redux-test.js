@@ -69,7 +69,7 @@ describe('combineReducers', () => {
 });
 
 describe('applyMiddleware', () => {
-  it('takes an array of middlewares and returns a function that takes the store as an argument and wraps its dispatch method with the chained middlewares', () => {
+  it('takes an array containing one middleware and returns a function that takes the store as an argument and wraps its dispatch method with the middleware', () => {
     const middleware = jest.fn();
     const middlewareReturnFunction = jest.fn();
     const wrappedDispatch = jest.fn();
@@ -92,5 +92,27 @@ describe('applyMiddleware', () => {
       })
     );
     expect(store.dispatch).toEqual(wrappedDispatch);
+  });
+
+  it('takes an array containing two middlewares and returns a function that takes the store as an argument and wraps its dispatch method with both chained middlewares', () => {
+    const middlewareReturnFunctionOne = jest.fn();
+    const middlewareOne = () => middlewareReturnFunctionOne;
+    
+    const wrappedDispatchTwo = jest.fn();
+    const middlewareReturnFunctionTwo = jest.fn();
+    middlewareReturnFunctionTwo.mockReturnValue(wrappedDispatchTwo);
+
+    const middlewareTwo = () => middlewareReturnFunctionTwo;
+    
+    const dispatch = jest.fn();
+    const store = {
+      getState: jest.fn(),
+      dispatch,
+    }
+
+    applyMiddleware([middlewareOne, middlewareTwo])(store);
+
+    expect(middlewareReturnFunctionOne).toHaveBeenCalledWith(wrappedDispatchTwo);
+    expect(middlewareReturnFunctionTwo).toHaveBeenCalledWith(dispatch);
   });
 });
