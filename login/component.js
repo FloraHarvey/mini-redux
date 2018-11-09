@@ -3,8 +3,7 @@ import { View, Button, Text } from 'react-native';
 import PropTypes from 'prop-types';
 import { connect } from '../my-react-redux/myConnect';
 
-import { login, logout } from '../actions/user';
-
+import { login, logout } from './user.actions';
 
 class LoginContainer extends React.PureComponent {
 

@@ -1,6 +1,6 @@
 export const createStore = (reducer, preloadedState, storeEnhancer) => {
   const initialState = reducer(undefined, { type: 'Initial action' });
-  let state = initialState;
+  let state = initialState; // TODO - is there a better place to keep the state
 
   const listeners = [];
 
@@ -16,7 +16,7 @@ export const createStore = (reducer, preloadedState, storeEnhancer) => {
       // The result returned by the reducer is set as the new state of the store
       state = reducer(state, action);
       // all of the subscribed callback functions are called.
-      listeners.forEach(listener => listener());
+      listeners.forEach(listener => listener()); // TODO: don't update every component every time an action is dispatched
     },
     subscribe: (listener) => {
       // subscribe takes a callback function and appends it to a list of listeners.
@@ -30,13 +30,14 @@ export const createStore = (reducer, preloadedState, storeEnhancer) => {
   };
 
   if (storeEnhancer) {
-    storeEnhancer(store);
+    storeEnhancer(store); // TODO: don't mutate the store
   }
 
   return store;
 };
 
-
+// Takes object whose values correspond to different reducing functions and
+// returns single reducing function that can be passed to createStore.
 export const combineReducers = (reducersObject) => {
   // throw if a reducer returns undefined
   Object.keys(reducersObject).forEach((k) => {
@@ -52,14 +53,14 @@ export const combineReducers = (reducersObject) => {
     Object.keys(reducersObject).forEach((key) => {
       // passes correct part of state to each reducer (or undefined)
       const state = prevState !== undefined ? prevState[key] : prevState;
-      // namespaces the states of each reducer under keys passed to in reducersObject
+      // namespaces the states returned by each reducing function under keys passed to in reducersObject
       newState[key] = reducersObject[key](state, action);
     });
     return newState;
   };
 };
 
-export const applyMiddleware = (middlewares) => (store) => {
+export const applyMiddleware = (middlewares) => (store) => { // TODO this should take createStore & return createStore
   middlewares.reverse();
   const { getState, dispatch } = store;
   let dispatchWithMiddleware = store.dispatch;

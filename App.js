@@ -4,9 +4,9 @@ import { createStore, applyMiddleware } from './my-redux';
 import { logger } from './my-middleware/logger';
 import { anotherLogger } from './my-middleware/anotherLogger';
 
-import reducer from './reducers/user';
+import reducer from './login/user.reducer';
 
-import LoginContainer from './containers/Login';
+import LoginContainer from './login/component';
 
 export default class App extends React.Component {
 

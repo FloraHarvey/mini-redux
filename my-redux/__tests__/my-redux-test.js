@@ -1,7 +1,7 @@
 import { createStore, combineReducers, applyMiddleware } from '../index';
-import userReducer, { initialState } from '../../reducers/user';
-import favouritesReducer from '../../reducers/favourites';
-import { login, logout } from '../../actions/user';
+import userReducer, { initialState } from '../../login/user.reducer';
+import favouritesReducer from '../../favourites/favourites.reducer';
+import { login, logout } from '../../login/user.actions';
 
 describe('store', () => {
 
@@ -97,13 +97,13 @@ describe('applyMiddleware', () => {
   it('takes an array containing two middlewares and returns a function that takes the store as an argument and wraps its dispatch method with both chained middlewares', () => {
     const middlewareReturnFunctionOne = jest.fn();
     const middlewareOne = () => middlewareReturnFunctionOne;
-    
+
     const wrappedDispatchTwo = jest.fn();
     const middlewareReturnFunctionTwo = jest.fn();
     middlewareReturnFunctionTwo.mockReturnValue(wrappedDispatchTwo);
 
     const middlewareTwo = () => middlewareReturnFunctionTwo;
-    
+
     const dispatch = jest.fn();
     const store = {
       getState: jest.fn(),
